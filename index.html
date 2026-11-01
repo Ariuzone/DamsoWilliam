@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WILLIAM — Damso · Une expérience interactive</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta name="theme-color" content="#0F0F23">
+<meta name="description" content="Expérience interactive autour de « William », piste 16 de Lithopédion (2018) de Damso. Histoire, dissection du morceau, constellation de références.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="grain"></div>
+
+<!-- VIDEO BACKGROUND (fichier local) -->
+<div id="video-stage" aria-hidden="true">
+  <video id="bg-video" playsinline loop preload="metadata" src="william.mp4"></video>
+  <div id="video-veil"></div>
+</div>
+
+<!-- PRELOADER -->
+<div id="loader">
+  <div class="glyph">Ψ<span class="glitch">.</span></div>
+  <div class="bar"><span id="loader-fill"></span></div>
+  <div class="meta"><span>Lithopédion</span><span>Piste 16</span><span class="pct" id="loader-pct">0%</span></div>
+</div>
+
+<!-- ENTRY GATE -->
+<div id="gate" hidden>
+  <div class="w-mono">W<em>.</em></div>
+  <h2>William — Damso</h2>
+  <p>Une minute trente-cinq. Le prénom d'origine, posé à la toute fin de <em>Lithopédion</em>. Ce site est construit autour du morceau lui-même : la vidéo joue en fond, le son démarre quand tu entres.</p>
+  <div class="gate-actions">
+    <button class="btn solid" id="enter-sound">Entrer · son activé</button>
+    <button class="btn" id="enter-mute">Entrer sans le son</button>
+  </div>
+  <div class="gate-note">Vidéo de fond : ton fichier local — le morceau n'a jamais eu de clip officiel</div>
+</div>
+
+<!-- FIXED CHROME -->
+<div id="progress-rail"><span></span></div>
+<div id="corner-brand">Damso — William</div>
+<div id="corner-time">1:35 · piste 16</div>
+<nav id="nav-dots" aria-label="Sections">
+  <a href="#hero" data-spy="hero" aria-label="Intro"></a>
+  <a href="#manifesto" data-spy="manifesto" aria-label="Manifeste"></a>
+  <a href="#histoire" data-spy="histoire" aria-label="Histoire"></a>
+  <a href="#dissect" data-spy="dissect" aria-label="Le morceau"></a>
+  <a href="#constellation" data-spy="constellation" aria-label="Constellation"></a>
+  <a href="#litho" data-spy="litho" aria-label="Lithopédion"></a>
+  <a href="#paroles" data-spy="paroles" aria-label="Paroles"></a>
+</nav>
+
+<!-- HUD PLAYER -->
+<div id="hud" role="region" aria-label="Lecteur">
+  <button class="hud-btn" id="hud-play" aria-label="Lecture / pause">
+    <svg id="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="ic-pause" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+  </button>
+  <button class="hud-btn" id="hud-mute" aria-label="Couper le son">
+    <svg id="ic-vol" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+    <svg id="ic-vol-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12A4.5 4.5 0 0 0 14 8v2.2l2.5 2.5v-.7zM19 12a7 7 0 0 1-1 3.6l1.5 1.5A9 9 0 0 0 21 12a9 9 0 0 0-7-8.8v2.1A7 7 0 0 1 19 12zM4.3 3L3 4.3 7.7 9H3v6h4l5 5v-6.7l4.3 4.3a7 7 0 0 1-2.6 1.4v2.1a9 9 0 0 0 4-2.1L19.7 21 21 19.7 4.3 3zM12 4L9.9 6.1 12 8.2V4z"/></svg>
+  </button>
+  <span class="time" id="hud-time">0:00 / 1:35</span>
+  <div class="track" id="hud-track">
+    <div class="rail"><div class="fill" id="hud-fill"></div></div>
+    <div class="zones" id="hud-zones"></div>
+    <div class="knob" id="hud-knob"></div>
+  </div>
+  <span class="hud-label">William · Lithopédion · 2018</span>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section id="hero">
+    <div class="overline">
+      <span>Piste <b>16</b></span>
+      <span><b>1:35</b></span>
+      <span>Prod. <b>DJ Ken</b></span>
+      <span><b>Lithopédion</b> — 2018</span>
+      <span>Single de <b>Platine</b></span>
+    </div>
+    <h1 class="h-giant" id="hero-title" aria-label="WILLIAM">WILLIAM</h1>
+    <div class="hero-row">
+      <p class="hero-lede rv">Damso s'appelle <strong>William Kalubi Mwamba</strong>. Sur l'album le plus intime de sa discographie, il a posé son vrai prénom sur un morceau — le plus court, le plus dense, à la toute fin du tracklist. <strong>Ce site l'écoute avec toi.</strong></p>
+      <button id="play-cta" class="rv" data-hover>
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <span>Jouer le morceau</span>
+      </button>
+    </div>
+    <div class="marquee top" aria-hidden="true"><div class="inner" id="mq1"></div></div>
+    <div class="marquee bottom" aria-hidden="true"><div class="inner" id="mq2"></div></div>
+  </section>
+
+  <!-- ============ MANIFESTO ============ -->
+  <section id="manifesto">
+    <p class="line" id="mani-text">
+      <span class="rv-line">Une chanson de <span class="green">1:35</span>.</span>
+      <span class="rv-line">Pas de clip officiel. <span class="ghost">Pas de refrain radio.</span></span>
+      <span class="rv-line"><span class="soft">Juste un prénom —</span> le sien.</span>
+    </p>
+    <div class="foot rv">
+      <span>Écrit par <b>W. Kalubi Mwamba</b></span>
+      <span>Produit par <b>DJ Ken</b></span>
+      <span><b>Lithopédion</b>, 15 juin 2018</span>
+    </div>
+  </section>
+
+  <!-- ============ HISTOIRE ============ -->
+  <section id="histoire">
+    <div class="head">
+      <div>
+        <span class="sec-tag">Chapitres</span>
+        <h2 class="h-big" style="margin-top:1rem;">L'histoire<br>avant le nom</h2>
+      </div>
+      <p class="dim rv" style="max-width:380px;font-weight:300;">Pour comprendre « William », il faut la trajectoire complète : de Kinshasa à Bruxelles, du groupe d'enfance aux Victoires de la musique.</p>
+    </div>
+
+    <div class="chapters">
+      <article class="chapter rv">
+        <div class="num">01</div>
+        <div>
+          <span class="where">Kinshasa — Quartier Kasongo</span>
+          <h3>1992 · Naissance</h3>
+          <div class="kw"><span>Kinshasa</span><span>RDC</span><span>Zaïre</span></div>
+        </div>
+        <p>William Kalubi Mwamba naît le <strong>10 mai 1992 à Kinshasa</strong>, d'une mère sociologue, <strong>Rose</strong>, et d'un père cardiologue, <strong>Marcel</strong>. Le pays s'enfonce dans la guerre : les conflits armés menacent la famille, qui prend une décision qui façonnera toute son œuvre — partir.</p>
+      </article>
+
+      <article class="chapter rv">
+        <div class="num">02</div>
+        <div>
+          <span class="where">Belgique — Kraainem · Matonge</span>
+          <h3>~2001 · L'exil</h3>
+          <div class="kw"><span>Kraainem</span><span>Bruxelles</span><span>Matonge</span><span>9 ans</span></div>
+        </div>
+        <p>La famille fuit la RDC et s'installe en <strong>Belgique alors qu'il a neuf ans</strong>, à Kraainem, en périphérie bruxelloise. À 22 ans, il choisit de vivre dans le <strong>quartier congolais de Matonge</strong>, à Ixelles — un retour symbolique au cœur de l'Europe. Il sera naturalisé belge, entre deux drapeaux pour toujours.</p>
+      </article>
+
+      <article class="chapter rv">
+        <div class="num">03</div>
+        <div>
+          <span class="where">Bruxelles — OPG</span>
+          <h3>2006 · Le rap</h3>
+          <div class="kw"><span>OPG</span><span>Dolfa</span><span>Lio Brown</span><span>Salle d'attente</span></div>
+        </div>
+        <p>À quatorze ans, il fonde le groupe <strong>OPG</strong> avec son ami d'enfance <strong>Dolfa</strong>, bientôt rejoints par Rex, Ducke et Lio Brown. En 2014, il publie seul sa première mixtape, <strong>Salle d'attente</strong> — onze titres, téléchargement gratuit, productions maison.</p>
+      </article>
+
+      <article class="chapter rv">
+        <div class="num">04</div>
+        <div>
+          <span class="where">Paris — 92i · Universal</span>
+          <h3>2015 · Booba</h3>
+          <div class="kw"><span>Poséidon</span><span>92i</span><span>Batterie faible</span></div>
+        </div>
+        <p>Ramené par <strong>Booba</strong> grâce à « Poséidon » (mixtape OKLM), il intègre le <strong>92i</strong> et signe chez Universal. Premier album, <strong>Batterie faible</strong> (2016) : double disque de platine. Le gamin de Kraainem est devenu une tête d'affiche du rap francophone.</p>
+      </article>
+
+      <article class="chapter rv">
+        <div class="num">05</div>
+        <div>
+          <span class="where">Lithopédion — Piste 16</span>
+          <h3>2018 · William</h3>
+          <div class="kw"><span>15.06.2018</span><span>1:35</span><span>DJ Ken</span><span>Platine</span></div>
+        </div>
+        <p>Le 15 juin 2018 sort <strong>Lithopédion</strong> : triple platine, <strong>Victoire de la Musique 2019 du meilleur album rap</strong>. Et à la toute fin du tracklist, après quinze morceaux, un plan serré : <strong>« William », 1:35, produite par DJ Ken</strong> — le prénom d'origine, posé nu. Le titre devient Single de Platine, 30 millions de streams équivalents.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ DISSECTION ============ -->
+  <section id="dissect">
+    <div class="head">
+      <span class="sec-tag">Guide d'écoute</span>
+      <h2 class="h-big" style="margin-top:1rem;">1:35,<br>au scalpel</h2>
+      <p class="rv">Quatre-vingt-quinze secondes, pas une de plus. Voici notre lecture du morceau, phase par phase. Quand le son tourne, la timeline suit la lecture en temps réel — clique n'importe quelle phase pour y sauter. <span class="dim">(Notre écriture, pas les paroles : le texte complet vit sur Genius.)</span></p>
+    </div>
+    <div class="timeline" id="timeline"><!-- moments injectés en JS --></div>
+  </section>
+
+  <!-- ============ CONSTELLATION ============ -->
+  <section id="constellation">
+    <div class="head">
+      <h2 class="h-big">La constellation<br>de William</h2>
+      <span class="hint">Bouge la souris · clique un mot</span>
+    </div>
+    <div class="stage" id="const-stage">
+      <canvas id="const-canvas"></canvas>
+      <div class="tip" id="const-tip"><b></b><span></span></div>
+    </div>
+  </section>
+
+  <!-- ============ LITHOPÉDION ============ -->
+  <section id="litho">
+    <div class="grid">
+      <div>
+        <span class="sec-tag">L'album</span>
+        <h2 class="h-big" style="margin-top:1rem;">Litho-<br>pédion</h2>
+        <div class="def rv">
+          <span class="word">li · tho · pé · dion — n.m.</span>
+          <p>En médecine : un fœtus mort, non expulsé, qui se <strong>calcifie dans le ventre maternel</strong> et y demeure des décennies. Une vie restée à l'intérieur, devenue pierre.</p>
+        </div>
+        <div class="body rv">
+          <p>C'est le titre que Damso a choisi pour son troisième album : <strong>une chose portée trop longtemps en soi</strong>, qu'on finit par montrer au monde. L'album entier est ce fœtus devenu pierre — quinze morceaux de matière dense, certifiés presque tous au moins de platine.</p>
+          <p>Dans ce tracklist, deux prénoms existent : <strong>« Julien »</strong> en piste 4, <strong>« William »</strong> en piste 16. Le premier ouvre le récit, le second le referme — comme si l'album ne pouvait finir que par le vrai nom.</p>
+        </div>
+      </div>
+      <div class="data-grid rv" aria-label="Données de l'album">
+        <div class="data-cell"><span class="k">Sortie</span><span class="v">15.06<small>.2018</small></span></div>
+        <div class="data-cell"><span class="k">Pistes</span><span class="v">16<small> +2 bonus</small></span></div>
+        <div class="data-cell"><span class="k">Durée</span><span class="v">47:43</span></div>
+        <div class="data-cell accent"><span class="k">William</span><span class="v">1:35<small> — la plus courte</small></span></div>
+        <div class="data-cell accent"><span class="k">Certification</span><span class="v">×3<small> platine</small></span></div>
+        <div class="data-cell"><span class="k">Victoires 2019</span><span class="v">N°1<small> album rap</small></span></div>
+        <div class="data-cell"><span class="k">Producteur 16</span><span class="v">DJ Ken</span></div>
+        <div class="data-cell accent"><span class="k">Streams</span><span class="v">30<small> M — platine</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PAROLES ============ -->
+  <section id="paroles">
+    <div class="big-w" aria-hidden="true">W.</div>
+    <h2 class="h-big">Les paroles<br>s'écoutent debout</h2>
+    <p class="rv">Ici, pas de texte recopié : « William » est un morceau qui se reçoit d'un bloc, en 95 secondes, de préférence dans le noir. Le texte intégral et les annotations ligne par ligne vivent chez Genius — lis-les après avoir écouté, jamais avant.</p>
+    <div class="links rv">
+      <a class="btn solid" href="https://genius.com/Damso-william-lyrics" target="_blank" rel="noopener" data-hover>Paroles complètes · Genius ↗</a>
+      <button class="btn" id="replay-cta" data-hover>Rejouer le morceau</button>
+    </div>
+    <p class="note">Écoute conseillée : casque · fenêtres fermées · 1:35 de ton temps</p>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="cols">
+    <div>
+      <h4>Le morceau</h4>
+      <ul>
+        <li>« William » — Damso</li>
+        <li>Lithopédion · piste 16</li>
+        <li>1:35 · prod. DJ Ken</li>
+        <li>Single de Platine (SNEP)</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Sources</h4>
+      <ul>
+        <li><a href="https://fr.wikipedia.org/wiki/Damso" target="_blank" rel="noopener">Wikipédia — Damso</a></li>
+        <li><a href="https://fr.wikipedia.org/wiki/Lithop%C3%A9dion_(album)" target="_blank" rel="noopener">Wikipédia — Lithopédion</a></li>
+        <li><a href="https://genius.com/Damso-william-lyrics" target="_blank" rel="noopener">Genius — annotations</a></li>
+        <li><a href="https://snepmusique.com/les-certifications/" target="_blank" rel="noopener">SNEP — certifications</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Écouter ailleurs</h4>
+      <ul>
+        <li><a href="https://music.apple.com/fr/album/lithop%C3%A9dion/1396531057" target="_blank" rel="noopener">Apple Music ↗</a></li>
+        <li><a href="https://genius.com/Damso-william-lyrics" target="_blank" rel="noopener">Genius ↗</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Le site</h4>
+      <ul>
+        <li>Expérience fan non officielle</li>
+        <li>Conçu avec le design system ui-ux-pro-max</li>
+        <li>Motion : GSAP + ScrollTrigger</li>
+        <li>Vidéo de fond : fichier local (paroles vidéo de Franck-Du-Binks)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="legal">Projet de fan, sans affiliation ni endorsement. Droits du morceau : Damso, 92i / Universal Music France. Aucune parole reproduite sur ce site — écoute le morceau, lis Genius. © 2026</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
